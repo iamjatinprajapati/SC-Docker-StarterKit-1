@@ -352,7 +352,7 @@ function Add-SMS {
     ((Get-Content -Path $fileToUpdate -Raw) -replace "#Sms_Module", "# Add SMS module`nCOPY --from=sms \module\cm\content .\") | Set-Content -Path $fileToUpdate
 
     $fileToUpdate = Join-Path $DestinationFolder "\docker-compose.override.yml"
-    ((Get-Content -Path $fileToUpdate -Raw) -replace "#SMS_IMAGE", "SMS_IMAGE: `${SITECORE_MODULE_REGISTRY}sitecore-management-services-xp1-assets:`${SMS_VERSION:-latest}") | Set-Content -Path $fileToUpdate
+    ((Get-Content -Path $fileToUpdate -Raw) -replace "#SMS_IMAGE", "SMS_IMAGE: `${SITECORE_MODULE_REGISTRY}sitecore-management-services-xp1-assets:`${SMS_VERSION}-`${OS_VERSION}") | Set-Content -Path $fileToUpdate
 }
 
 function Add-SPS {
@@ -398,13 +398,13 @@ function Add-Horizon {
     ((Get-Content -Path $fileToUpdate -Raw) -replace "#FROM_HORIZON_RESOURCES_IMAGE", "FROM `${HORIZON_RESOURCES_IMAGE} as horizon_resources") | Set-Content -Path $fileToUpdate
     ((Get-Content -Path $fileToUpdate -Raw) -replace "#Horizon_Module", "# Add horizon module`nCOPY --from=horizon_resources \module\cm\content \inetpub\wwwroot") | Set-Content -Path $fileToUpdate
 
-    $fileToUpdate = Join-Path $DestinationFolder "\build\mssql\Dockerfile"
-    ((Get-Content -Path $fileToUpdate -Raw) -replace "#ARG_HORIZON_RESOURCES_IMAGE", "ARG HORIZON_RESOURCES_IMAGE") | Set-Content -Path $fileToUpdate
-    ((Get-Content -Path $fileToUpdate -Raw) -replace "#FROM_HORIZON_RESOURCES_IMAGE", "FROM `${HORIZON_RESOURCES_IMAGE} as horizon_resources") | Set-Content -Path $fileToUpdate
-    ((Get-Content -Path $fileToUpdate -Raw) -replace "#Horizon_Module", "# Add Horizon module`nCOPY --from=horizon_resources \module\db \horizon_integration_data`nRUN C:\DeployDatabases.ps1 -ResourcesDirectory C:\horizon_integration_data; `Remove-Item -Path C:\horizon_integration_data -Recurse -Force; ") | Set-Content -Path $fileToUpdate
+    # $fileToUpdate = Join-Path $DestinationFolder "\build\mssql\Dockerfile"
+    # ((Get-Content -Path $fileToUpdate -Raw) -replace "#ARG_HORIZON_RESOURCES_IMAGE", "ARG HORIZON_RESOURCES_IMAGE") | Set-Content -Path $fileToUpdate
+    # ((Get-Content -Path $fileToUpdate -Raw) -replace "#FROM_HORIZON_RESOURCES_IMAGE", "FROM `${HORIZON_RESOURCES_IMAGE} as horizon_resources") | Set-Content -Path $fileToUpdate
+    # ((Get-Content -Path $fileToUpdate -Raw) -replace "#Horizon_Module", "# Add Horizon module`nCOPY --from=horizon_resources \module\db \horizon_integration_data`nRUN C:\DeployDatabases.ps1 -ResourcesDirectory C:\horizon_integration_data; `Remove-Item -Path C:\horizon_integration_data -Recurse -Force; ") | Set-Content -Path $fileToUpdate
 
     $fileToUpdate = Join-Path $DestinationFolder "\docker-compose.override.yml"
-    ((Get-Content -Path $fileToUpdate -Raw) -replace "#HORIZON_RESOURCES_IMAGE", "HORIZON_RESOURCES_IMAGE: `${SITECORE_MODULE_REGISTRY}horizon-integration-xp0-assets:`${HORIZON_ASSET_VERSION}") | Set-Content -Path $fileToUpdate
+    ((Get-Content -Path $fileToUpdate -Raw) -replace "#HORIZON_RESOURCES_IMAGE", "HORIZON_RESOURCES_IMAGE: `${SITECORE_MODULE_REGISTRY}horizon-integration-`${TOPOLOGY}-assets:`${HORIZON_ASSET_VERSION}-`${OS_VERSION}") | Set-Content -Path $fileToUpdate
     ((Get-Content -Path $fileToUpdate -Raw) -replace "#hrz_allowed_origin", "Sitecore_Sitecore__IdentityServer__Clients__DefaultClient__AllowedCorsOrigins__AllowedCorsOriginsGroup2: https://`${HRZ_HOST}") | Set-Content -Path $fileToUpdate
     ((Get-Content -Path $fileToUpdate -Raw) -replace "#Sitecore_Horizon_ClientHost", "Sitecore_Horizon_ClientHost: https://`${HRZ_HOST}") | Set-Content -Path $fileToUpdate
 
